@@ -1,10 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Amplify HTML Demo</title>
+    <title>AWS Add Two Numbers</title>
 </head>
 <body>
-    <h1>Hello from AWS Amplify!</h1>
-    <p>Updated version deployed automatically through AWS Amplify!</p>
+
+    <h1>Add Two Numbers</h1>
+
+    <input type="number" id="a" placeholder="Enter first number">
+    <input type="number" id="b" placeholder="Enter second number">
+
+    <button onclick="addNumbers()">Add</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        async function addNumbers() {
+            const a = document.getElementById("a").value;
+            const b = document.getElementById("b").value;
+
+            try {
+                const response = await fetch(
+                    "https://gccxpwca7c.execute-api.ap-south-1.amazonaws.com/prod/add",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            a: Number(a),
+                            b: Number(b)
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("result").innerText =
+                        "Sum: " + data.sum;
+                } else {
+                    document.getElementById("result").innerText =
+                        "Error: " + data.error;
+                }
+
+            } catch (error) {
+                document.getElementById("result").innerText =
+                    "Request failed: " + error;
+            }
+        }
+    </script>
+
 </body>
 </html>
